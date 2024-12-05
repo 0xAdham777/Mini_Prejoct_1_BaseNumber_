@@ -23,7 +23,7 @@ void ClearSkrean()
 
 void Go_BackTo_Star_Menu()
 {
-	cout << endl << "Preass To Any Key To Go Back To Start Skrean ..." << endl; 
+	cout << endl << "Preass To Any Key To Go Back To Start Skrean ..." << endl;
 	system("pause>0");
 	Project();
 }
@@ -46,7 +46,7 @@ int Digits_Number_In_Intger(char Digit)
 	case 'b': case 'B': return 11;
 	case 'c': case 'C': return 12;
 	case 'D': case 'd': return 13;
-    case 'E': case 'e': return 14;
+	case 'E': case 'e': return 14;
 	case 'F': case 'f': return 15;
 	}
 }
@@ -54,12 +54,12 @@ int Digits_Number_In_Intger(char Digit)
 string Digits_Number_In_Decimael_To_Hex(short Digits)
 {
 	string DigitsInHex[] = { "","1","2" ,"3" ,"4" ,"5" ,"6" ,"7" ,"8" ,"9" ,"A" ,"B" ,"C","D","E","F" };
-	return DigitsInHex[Digits ];
+	return DigitsInHex[Digits];
 }
 
 string Convert_Base_X_To_Base_16()
 {
-	unsigned long long LongGlobaelNumber_In_10 = stoi(GlobaelNumber);
+	unsigned long long LongGlobaelNumber_In_10 = stoll(GlobaelNumber);
 
 	string NumberIN_16 = "";
 
@@ -73,7 +73,7 @@ string Convert_Base_X_To_Base_16()
 		{
 			NumberIN_16 = "0" + NumberIN_16;
 		}
-		
+
 		LongGlobaelNumber_In_10 /= 16;
 
 	} while (LongGlobaelNumber_In_10 != 0);
@@ -84,14 +84,14 @@ string Convert_Base_X_To_Base_16()
 
 string Convert_Base_X_To_Base_8()
 {
-	unsigned long long LongGlobaelNumber_In_10 = stoi(GlobaelNumber);
+	unsigned long long LongGlobaelNumber_In_10 = stoll(GlobaelNumber);
 
 
 	string NumberIN_8 = "";
 
 	do
 	{
-		NumberIN_8 = to_string(LongGlobaelNumber_In_10 % 8)+ NumberIN_8;
+		NumberIN_8 = to_string(LongGlobaelNumber_In_10 % 8) + NumberIN_8;
 
 		LongGlobaelNumber_In_10 /= 8;
 
@@ -103,16 +103,16 @@ string Convert_Base_X_To_Base_8()
 
 string Convert_Base_X_To_Base_2()
 {
-	  unsigned long long LongGlobaelNumber_In_10 = stoi(GlobaelNumber);
+	unsigned long long LongGlobaelNumber_In_10 = stoll(GlobaelNumber);
 
 	string NumberIN_2 = "";
-	
+
 	do
 	{
 		NumberIN_2 = to_string(LongGlobaelNumber_In_10 % 2) + NumberIN_2;
 		LongGlobaelNumber_In_10 /= 2;
 
-	} while (LongGlobaelNumber_In_10 !=0);
+	} while (LongGlobaelNumber_In_10 != 0);
 
 	GlobaelNumber = NumberIN_2;
 	return GlobaelNumber;
@@ -120,7 +120,7 @@ string Convert_Base_X_To_Base_2()
 
 string Convert_Base_X_To_Base_10(short Base)
 {
-	int sum = 0, power = 0;
+	long long  sum = 0, power = 0;
 	string NewNumber = "";
 
 	for (int i = GlobaelNumber.size() - 1; i >= 0; i--)
@@ -182,7 +182,9 @@ void Converter_Menu_Skrean()
 
 	Lanch_Converter_Menu_Skrean((enTo_Base_Conv)Base);
 
-	cout << endl << "Your New Number In Base " << Base << " Is : " <<
+	int BaseWante_ToConvert[] = { 16,10,8,2 };
+
+	cout << endl << "Your New Number In Base " << BaseWante_ToConvert[Base - 1] << " Is : " <<
 		GlobaelNumber << endl;
 
 
@@ -233,18 +235,18 @@ bool IsExit_Digits_In_Base_X(char Digits, short Base)
 	}
 	case  2:
 	{
-		return ((Digits >= '0' && Digits <= '1'));
+		return ((Digits == '0' || Digits == '1'));
 	}
 	}
 
 }
 
-bool IsExit_Number_In_Base_X(string Number, short Base)
+bool IsExit_Number_In_Base_X(string GlobelNumber, short Base)
 {
 
-	for (int i = 0; i < Number.size(); i++)
+	for (int i = 0; i < GlobelNumber.size(); i++)
 	{
-		if (!IsExit_Digits_In_Base_X(Number[i], Base))
+		if (!IsExit_Digits_In_Base_X(GlobelNumber[i], Base))
 		{
 			return false;
 		}
@@ -253,40 +255,44 @@ bool IsExit_Number_In_Base_X(string Number, short Base)
 	return true;
 }
 
+bool Is_Big_Number(string GlobelNumber, short Base)
+{
+	if (stoll(GlobelNumber) > 9000000000000000000 || stoll(GlobelNumber) < 0)
+	{
+		return true;
+	}
+	return false;
+}
+
 void ReadNumber(short Base)
 {
+	static string Copy_Globel_Number = "";
 
-	do
+	cout << "\nPleas Enter Your Number in Base " << Base << " ? " << endl;
+	getline(cin >> ws, GlobaelNumber);
+
+	Copy_Globel_Number = GlobaelNumber;
+
+	if (!IsExit_Number_In_Base_X(Copy_Globel_Number, Base))
 	{
-		cout << "\nPleas Enter Your Number in Base " << Base << " ? " << endl;
-		getline(cin >> ws, GlobaelNumber);
+		system("color 4F");
+		cout << endl << "This Number Don't Exit ." << endl;
+		ReadNumber(Base);
+	}
+	else
+	{
+		GlobaelNumber = Convert_Base_X_To_Base_10(Base);
 
-	} while (!IsExit_Number_In_Base_X(GlobaelNumber, Base));
+		if (Is_Big_Number(GlobaelNumber, Base))
+		{
+			cout << endl << "This Number Is Very Big ." << endl;
+			system("color 4F");
+			ReadNumber(Base);
+		}
+	}
 
-
+	GlobaelNumber = Copy_Globel_Number;
 }
-
-void Base_2_Sckrean()
-{
-	PrintBaseConvertSkeran(2);
-	ReadNumber(2);
-}
-void Base_8_Sckrean()
-{
-	PrintBaseConvertSkeran(8);
-	ReadNumber(8);
-}
-void Base_10_Sckrean()
-{
-	PrintBaseConvertSkeran(10);
-	ReadNumber(10);
-}
-void Base_16_Sckrean()
-{
-	PrintBaseConvertSkeran(16);
-	ReadNumber(16);
-}
-
 void Lanch_BaseConvertion_Go(enBase_Conv Base_Conv)
 {
 
@@ -295,26 +301,30 @@ void Lanch_BaseConvertion_Go(enBase_Conv Base_Conv)
 	case enBase_Conv::enBase16:
 	{
 		ClearSkrean();
-		Base_16_Sckrean();
+		PrintBaseConvertSkeran(16);
+		ReadNumber(16);
 		Converter_Menu_Skrean();
 		break;
 	}
 	case enBase_Conv::enBase10:
 	{
 		ClearSkrean();
-		Base_10_Sckrean();
+		PrintBaseConvertSkeran(10);
+		ReadNumber(10);
 		Converter_Menu_Skrean();
 		break;
 	}case enBase_Conv::enBase8:
 	{
 		ClearSkrean();
-		Base_8_Sckrean();
+		PrintBaseConvertSkeran(8);
+		ReadNumber(8);
 		Converter_Menu_Skrean();
 		break;
 	}case enBase_Conv::enBase2:
 	{
 		ClearSkrean();
-		Base_2_Sckrean();
+		PrintBaseConvertSkeran(2);
+		ReadNumber(2);
 		Converter_Menu_Skrean();
 		break;
 	}
